@@ -21,7 +21,7 @@ namespace Kfc.ChatRoom
         public const string GROUP_ID = "PrivateChatRoom";
         public GameObject prefab_PrivateRoom_Manifest;     
         public GameObject gobj_PublicRoom_Manifest;
-
+        
         public GameObject manifestContent;
         public GameObject mask;
 
@@ -42,10 +42,11 @@ namespace Kfc.ChatRoom
 
         Transform currentRoom;
         PlayerBean currentPlayerBean;
+        const string url_push = "http://" + WebSocketController.HOST + "/Push";
         const string url_GetNewNotifiedRooms = CHAT_API_HOST + "/GetMyNewNotifyRooms";
         const string url_InvitePlayerToPrivateChatroom = CHAT_API_HOST + "/InvitePlayerToPrivateChatroom";
-        const string url_push = "http://" + WebSocketController.HOST + "/Push";
-        const string url_privatePush = CHAT_API_HOST + "/PushPrivateMessage";
+        const string url_PrivatePush = CHAT_API_HOST + "/PushPrivateMessage";
+        const string url_DeleteNotify = CHAT_API_HOST + "/DeletePrivateRoomNotify";
 
         string mNickName;
         string account;
@@ -129,7 +130,7 @@ namespace Kfc.ChatRoom
                 string tableId = table.GetValue("tableId").ToString();
                 if (privateChatRoomDic.ContainsKey(tableId))
                 {
-                    privateChatRoomDic[tableId].UpdateDate(double.Parse(table.GetValue("date").ToString()));
+                    privateChatRoomDic[tableId].CheckIsNew(double.Parse(table.GetValue("date").ToString()));
                 }
                 else
                 {
@@ -183,7 +184,20 @@ namespace Kfc.ChatRoom
 
         public void DeleteTheChatRoom(GameObject _beanObject)
         {
-            var bean = _beanObject.GetComponent<PrivateChatRoomBean>();
+            var bean = _beanObject.GetComponent<PrivateChatRoomBean>();          
+
+            //傳送給伺服器刪除通知
+            Uri path = new Uri(url_DeleteNotify);
+            double lastUpdateTime = DateTime.UtcNow.AddHours(8).Ticks;
+            HTTPRequest request = new HTTPRequest(path, HTTPMethods.Post);
+            Dictionary<string, object> req = new Dictionary<string, object>();
+            req.Add("account", account);
+            req.Add("tableId", bean.tableId);
+            request.AddHeader("Content-Type", "application/json");
+            request.RawData = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(req));
+            request.Send();
+
+            //刪除生成物件
             if (bean.PrivateChatRoomControl != null)
             {
                 Destroy(bean.PrivateChatRoomControl.gameObject);
@@ -201,7 +215,7 @@ namespace Kfc.ChatRoom
             }
             else
             {
-                currentRoom.GetComponent<PrivateChatRoomBean>().PrivateChatRoomControl.SendChatMessage(chatInputField.text, url_privatePush);
+                currentRoom.GetComponent<PrivateChatRoomBean>().PrivateChatRoomControl.SendChatMessage(chatInputField.text, url_PrivatePush);
             }
 
             chatInputField.text = string.Empty;

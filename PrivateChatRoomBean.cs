@@ -29,34 +29,35 @@ namespace Kfc.ChatRoom
             myNickName = _myNickName;
             otherAccount = _otherAccount;
             otherNickName = _otherNickName;
-            UpdateDate(_date);
-            transform.Find("Gobj_Pages/PageFrame/Txt_Title").GetComponent<Text>().text = _otherNickName;
+            CheckIsNew(_date);
+            transform.Find("Gobj_Pages/PageFrame/Gobj_Text/Txt_Title").GetComponent<Text>().text = _otherNickName;
         }
 
-        public void UpdateDate(double _date)
+        public void CheckIsNew(double _date)
         {
             string key = "PrivateChatRoom_" + tableId;
+            GameObject isNewIcon = transform.Find("Img_IsNew").gameObject;
             date = _date;
             if (PlayerPrefs.HasKey(key))
             {
                 Debug.Log("date : " + date);
                 Debug.Log("double.Parse(PlayerPrefs.GetString(key)) : " + double.Parse(PlayerPrefs.GetString(key)));
 
-                transform.Find("Img_IsNew").gameObject.SetActive(double.Parse(PlayerPrefs.GetString(key)) < date);               
+                isNewIcon.SetActive(double.Parse(PlayerPrefs.GetString(key)) < date);               
             }
             else
             {
-                transform.Find("Img_IsNew").gameObject.SetActive(true);
+                isNewIcon.SetActive(true);
             }
-            PlayerPrefs.SetString(key, date.ToString());
+
+            if (isNewIcon.activeSelf == true)
+            {
+                isNewIcon.GetComponent<uTweenScale>().ResetToBeginning();
+                isNewIcon.GetComponent<uTweenScale>().PlayForward();
+            }
+            //PlayerPrefs.SetString(key, date.ToString());
         }
 
-        //public void SetIsFriend(bool _isFriend)
-        //{
-        //    isFriend = _isFriend;
-        //    transform.Find("Gobj_Pages/PageFrame/UIBtn_AddFriend").gameObject.SetActive(!isFriend);
-        //}
-        
         public void SwitchPage()
         {
             uTweenPosition tween = transform.Find("Gobj_Pages/PageFrame").GetComponent<uTweenPosition>();

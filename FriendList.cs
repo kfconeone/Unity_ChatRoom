@@ -64,6 +64,20 @@ namespace Kfc.ChatRoom
             }
             var friendList = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonResponse["friendList"].ToString());
 
+            if (friendContent.childCount > 0)
+            {
+                List<GameObject> oldContentList = new List<GameObject>();
+                for (int i = 0; i < friendContent.childCount; ++i)
+                {
+                    oldContentList.Add(friendContent.GetChild(i).gameObject);
+                }
+
+                foreach (var child in oldContentList)
+                {
+                    Destroy(child);
+                }
+            }
+
             foreach (var friend in friendList)
             {
                 var task = Async.Instantiate(prefabFriend, friendContent, false);
