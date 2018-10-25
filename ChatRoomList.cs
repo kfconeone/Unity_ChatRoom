@@ -11,6 +11,7 @@ namespace Kfc.ChatRoom
 {
     public class ChatRoomList : MonoBehaviour
     {
+        string account;
         public GameObject mask;
         public GameObject prefab_searchedPlayer;
         public Transform trans_SearchContent;
@@ -23,8 +24,10 @@ namespace Kfc.ChatRoom
         /// <summary>
         /// 開啟聊天室列表
         /// </summary>
-        public void OpenChatRoomList()
+        public void OpenChatRoomList(string _account)
         {
+            account = _account;
+            txt_SearchResult.gameObject.SetActive(true);
             gameObject.SetActive(true);
         }
 
@@ -34,6 +37,7 @@ namespace Kfc.ChatRoom
         public void CloseChatRoomList()
         {
             //DestroyAllSearchedPlayers();
+            txt_SearchResult.gameObject.SetActive(false);
             gameObject.SetActive(false);
         }
 
@@ -48,6 +52,7 @@ namespace Kfc.ChatRoom
             HTTPRequest request = new HTTPRequest(path, HTTPMethods.Post, OnSearchPlayerByNickNameFinished);
 
             Dictionary<string, object> req = new Dictionary<string, object>();
+            req.Add("account", account);
             req.Add("nickName", input_NickName.text);
 
 
@@ -60,6 +65,8 @@ namespace Kfc.ChatRoom
 
         private void OnSearchPlayerByNickNameFinished(HTTPRequest originalRequest, HTTPResponse response)
         {
+            mask.SetActive(false);
+            txt_SearchResult.gameObject.SetActive(true);
             string tempResult = "\" {0} \"的搜尋結果 : 共有 {1} 筆結果";
 
             Debug.Log(response.DataAsText);
@@ -85,9 +92,6 @@ namespace Kfc.ChatRoom
 
                 bean.gameObject.SetActive(true);
             }
-
-            mask.SetActive(false);
-            txt_SearchResult.gameObject.SetActive(true);
         }
 
         void DestroyAllSearchedPlayers()

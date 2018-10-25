@@ -19,7 +19,10 @@ namespace Kfc.ChatRoom
         /// </summary>
         public void OpenListBox()
         {
-            chatRoomList.OpenChatRoomList();
+            SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ViewOpen.ToString());
+            transform.Find("Gobj_BtnBox/UIBtn_ChatList/Image").gameObject.SetActive(true);
+            transform.Find("Gobj_BtnBox/UIBtn_FriendList/Image").gameObject.SetActive(false);
+            chatRoomList.OpenChatRoomList(account);
             friendList.CloseFriendList();
             gameObject.SetActive(true);
         }
@@ -29,17 +32,24 @@ namespace Kfc.ChatRoom
         /// </summary>
         public void CloseListBox()
         {
+            SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ViewClose.ToString());
             gameObject.SetActive(false);
         }
 
         public void SwitchToChatListBox()
         {
-            chatRoomList.OpenChatRoomList();
+            SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ComClick1.ToString());
+            transform.Find("Gobj_BtnBox/UIBtn_ChatList/Image").gameObject.SetActive(true);
+            transform.Find("Gobj_BtnBox/UIBtn_FriendList/Image").gameObject.SetActive(false);
+            chatRoomList.OpenChatRoomList(account);
             friendList.CloseFriendList();
         }
 
         public void SwitchToFriendListBox()
         {
+            SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ComClick1.ToString());
+            transform.Find("Gobj_BtnBox/UIBtn_ChatList/Image").gameObject.SetActive(false);
+            transform.Find("Gobj_BtnBox/UIBtn_FriendList/Image").gameObject.SetActive(true);
             chatRoomList.CloseChatRoomList();
             friendList.OpenFriendList(account);
         }

@@ -21,7 +21,7 @@ namespace Kfc.ChatRoom
         public const string GROUP_ID = "PrivateChatRoom";
         public GameObject prefab_PrivateRoom_Manifest;     
         public GameObject gobj_PublicRoom_Manifest;
-        
+
         public GameObject manifestContent;
         public GameObject mask;
 
@@ -57,16 +57,25 @@ namespace Kfc.ChatRoom
             mNickName = _nickName;
             gameObject.SetActive(true);
             gobj_PublicRoom_Manifest.GetComponent<PublicChatRoomBean>().Init(_account, _nickName);
-            currentRoom = gobj_PublicRoom_Manifest.transform;
+            //currentRoom = ;
+            if (currentRoom == null)
+            {
+                currentRoom = gobj_PublicRoom_Manifest.transform;
+            }
+            if (currentRoom != gobj_PublicRoom_Manifest.transform)
+            {
+                SetCurrentChatRoom(gobj_PublicRoom_Manifest.transform);
+            }
             GetMyNewNotifiedRooms();
 
-            GameObject.Find("SystemMessageController").GetComponent<SystemMessage.SystemMessageControl>().chatRoom = this;
+            
             //要給ListBox資料
             transform.Find("Gobj_ListBox").GetComponent<ListBox>().Init(_account);
         }
 
         public void CreateChatRoom(GameObject _searchBean)
         {
+            SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ComClick1.ToString());
             currentPlayerBean = _searchBean.GetComponent<PlayerBean>();
             Uri path = new Uri(url_InvitePlayerToPrivateChatroom);
             double lastUpdateTime = DateTime.UtcNow.AddHours(8).Ticks;
@@ -148,6 +157,7 @@ namespace Kfc.ChatRoom
 
         public void SetCurrentChatRoom(Transform _roomManifest)
         {
+            SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ComClick1.ToString());
             if (_roomManifest == currentRoom) return;
 
             //======先全部清乾淨
@@ -184,6 +194,7 @@ namespace Kfc.ChatRoom
 
         public void DeleteTheChatRoom(GameObject _beanObject)
         {
+            SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ComClick3.ToString());
             var bean = _beanObject.GetComponent<PrivateChatRoomBean>();          
 
             //傳送給伺服器刪除通知
@@ -208,6 +219,7 @@ namespace Kfc.ChatRoom
 
         public void SendChatMessage()
         {
+            SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ComClick2.ToString());
             if (string.IsNullOrEmpty(chatInputField.text)) return;
             if (currentRoom == gobj_PublicRoom_Manifest.transform)
             {
