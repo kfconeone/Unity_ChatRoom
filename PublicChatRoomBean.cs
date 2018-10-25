@@ -15,6 +15,7 @@ namespace Kfc.ChatRoom
 
         public string mNickName;
         public string account;
+
         public PublicChatRoomControl publicChatRoomControl;
         public void Init(string _account, string _nickName)
         {

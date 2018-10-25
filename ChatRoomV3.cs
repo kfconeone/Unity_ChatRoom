@@ -24,6 +24,8 @@ namespace Kfc.ChatRoom
 
         public GameObject manifestContent;
         public GameObject mask;
+        public int myIconIndex;
+        public string myFbId;
 
         public InputField chatInputField;
         Dictionary<string, PrivateChatRoomBean> mPrivateChatRoomDic;
@@ -51,10 +53,12 @@ namespace Kfc.ChatRoom
         string mNickName;
         string account;
 
-        public void OpenChatBox(string _account, string _nickName)
+        public void OpenChatBox(string _account, string _nickName,int _iconIndex,string _fbId)
         {
             account = _account;
             mNickName = _nickName;
+            myIconIndex = _iconIndex;
+            myFbId = _fbId;
             gameObject.SetActive(true);
             gobj_PublicRoom_Manifest.GetComponent<PublicChatRoomBean>().Init(_account, _nickName);
             //currentRoom = ;
@@ -229,11 +233,11 @@ namespace Kfc.ChatRoom
             if (string.IsNullOrEmpty(chatInputField.text)) return;
             if (currentRoom == gobj_PublicRoom_Manifest.transform)
             {
-                currentRoom.GetComponent<PublicChatRoomBean>().publicChatRoomControl.SendChatMessage(chatInputField.text, url_push);
+                currentRoom.GetComponent<PublicChatRoomBean>().publicChatRoomControl.SendChatMessage(chatInputField.text, url_push,myIconIndex,myFbId);
             }
             else
             {
-                currentRoom.GetComponent<PrivateChatRoomBean>().PrivateChatRoomControl.SendChatMessage(chatInputField.text, url_PrivatePush);
+                currentRoom.GetComponent<PrivateChatRoomBean>().PrivateChatRoomControl.SendChatMessage(chatInputField.text, url_PrivatePush, myIconIndex, myFbId);
             }
 
             chatInputField.text = string.Empty;

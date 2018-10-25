@@ -35,11 +35,11 @@ namespace Kfc.ChatRoom
 
             if (pushObject.GetValue("account").ToString().Equals(myBean.myAccount))
             {
-                GenerateText(pushObject.GetValue("nickName").ToString(), pushObject.GetValue("content").ToString(), true);
+                GenerateText(pushObject.GetValue("nickName").ToString(), pushObject.GetValue("content").ToString(), (int)pushObject.GetValue("iconIndex"), pushObject.GetValue("fbId").ToString(), true);
             }
             else
             {
-                GenerateText(pushObject.GetValue("nickName").ToString(), pushObject.GetValue("content").ToString(), false);
+                GenerateText(pushObject.GetValue("nickName").ToString(), pushObject.GetValue("content").ToString(), (int)pushObject.GetValue("iconIndex"), pushObject.GetValue("fbId").ToString(), false);
 
             }
             lastUpdateTime = (double)pushObject.GetValue("date");
@@ -63,11 +63,11 @@ namespace Kfc.ChatRoom
 
                     if (jobj.GetValue("account").ToString().Equals(myBean.myAccount))
                     {
-                        GenerateText(jobj.GetValue("nickName").ToString(), jobj.GetValue("content").ToString(), true);
+                        GenerateText(jobj.GetValue("nickName").ToString(), jobj.GetValue("content").ToString(), (int)jobj.GetValue("iconIndex"), jobj.GetValue("fbId").ToString(), true);
                     }
                     else
                     {
-                        GenerateText(jobj.GetValue("nickName").ToString(), jobj.GetValue("content").ToString(), false);
+                        GenerateText(jobj.GetValue("nickName").ToString(), jobj.GetValue("content").ToString(), (int)jobj.GetValue("iconIndex"), jobj.GetValue("fbId").ToString(), false);
                     }
                     lastUpdateTime = tempDate;
                 }
@@ -86,7 +86,7 @@ namespace Kfc.ChatRoom
             transform.Find("Scroll_Chatting/Content").GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = true;
         }
 
-        public void SendChatMessage(string _message, string _url)
+        public void SendChatMessage(string _message, string _url, int _myIconIndex, string _myFbId)
         {
             if (string.IsNullOrEmpty(_message))
             {
@@ -99,6 +99,8 @@ namespace Kfc.ChatRoom
             Dictionary<string, object> req = new Dictionary<string, object>();
             req.Add("account", myBean.myAccount);
             req.Add("nickName", myBean.myNickName);
+            req.Add("iconIndex", _myIconIndex);
+            req.Add("fbId", _myFbId);
             req.Add("tableId", roomName);
             req.Add("message", _message);
 
@@ -122,7 +124,7 @@ namespace Kfc.ChatRoom
 
 
 
-        void GenerateText(string _nickName, string _content, bool _isMe)
+        void GenerateText(string _nickName, string _content,int _iconIndex,string _fbId, bool _isMe)
         {
 
             GameObject tempPrefab;
@@ -140,6 +142,7 @@ namespace Kfc.ChatRoom
 
             Transform text = Instantiate(tempPrefab, contentObject.transform).transform;
             text.Find("Gobj_Info/UITxt_Name").GetComponent<Text>().text = _nickName;
+            Generic.IconFetcher.SetIcon(text.Find("Gobj_Info/UIImg_Icon").GetComponent<Image>(), _iconIndex, _fbId);
             text.Find("UIImg_MsgBG/Text").GetComponent<Text>().text = _content;
             text.gameObject.SetActive(true);
             if (text.GetComponent<HorizontalOrVerticalLayoutGroup>() != null)
