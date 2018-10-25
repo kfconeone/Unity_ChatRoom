@@ -99,7 +99,6 @@ namespace Kfc.ChatRoom
             tempChat.Add("nickName", myBean.mNickName);
             tempChat.Add("iconIndex", _myIconIndex);
             tempChat.Add("fbId", _myFbId);
-            tempChat.Add("nickName", myBean.mNickName);
             tempChat.Add("content", _message);
             tempChat.Add("date", date);
 
