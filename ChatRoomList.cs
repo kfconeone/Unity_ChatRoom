@@ -89,6 +89,7 @@ namespace Kfc.ChatRoom
 
                 bean.txt_nickName.text = bean.nickName;
                 bean.txt_saySomething.text = bean.saySomething;
+                Generic.IconFetcher.SetIcon(bean.transform.Find("UIImg_Icon").GetComponent<Image>(), bean.iconIndex, bean.fbId);
 
                 bean.gameObject.SetActive(true);
             }

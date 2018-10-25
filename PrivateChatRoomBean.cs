@@ -14,6 +14,8 @@ namespace Kfc.ChatRoom
         public string myNickName;
         public string otherAccount;
         public string otherNickName;
+        public int otherIconIndex;
+        public string otherFbId;
         //public bool isFriend;
 
         public double date;
@@ -23,13 +25,15 @@ namespace Kfc.ChatRoom
         public Transform scrollContent;
 
         
-        public void Init(string _tableId,string _myAccount, string _myNickName, string _otherAccount, string _otherNickName, double _date)
+        public void Init(string _tableId,string _myAccount, string _myNickName, string _otherAccount, string _otherNickName,int _otherIconIndex,string _otherFbId, double _date)
         {
             tableId = _tableId;
             myAccount = _myAccount;
             myNickName = _myNickName;
             otherAccount = _otherAccount;
             otherNickName = _otherNickName;
+            otherIconIndex = _otherIconIndex;
+            otherFbId = _otherFbId;
             CheckIsNew(_date);
             transform.Find("Gobj_Pages/PageFrame/Gobj_Text/Txt_Title").GetComponent<Text>().text = _otherNickName;
             

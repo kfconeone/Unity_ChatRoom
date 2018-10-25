@@ -101,8 +101,9 @@ namespace Kfc.ChatRoom
             {
                 var room = Instantiate(prefab_PrivateRoom_Manifest, manifestContent.transform).GetComponent<PrivateChatRoomBean>();
                 room.name = tableId;
-                room.Init(tableId,account, mNickName, currentPlayerBean.account, currentPlayerBean.nickName,0);
+                room.Init(tableId,account, mNickName, currentPlayerBean.account, currentPlayerBean.nickName, currentPlayerBean.iconIndex, currentPlayerBean.fbId, 0);
                 privateChatRoomDic.Add(tableId, room);
+                Generic.IconFetcher.SetIcon(room.transform.Find("Gobj_Pages/PageFrame/Icon/Icon_Chat").GetComponent<Image>(), currentPlayerBean.iconIndex, currentPlayerBean.fbId);
                 room.gameObject.SetActive(true);
             }
             SetCurrentChatRoom(privateChatRoomDic[tableId].transform);
@@ -133,6 +134,7 @@ namespace Kfc.ChatRoom
             mask.SetActive(false);
             var result = JsonConvert.DeserializeObject<JObject>(response.DataAsText);
             var tableList = JsonConvert.DeserializeObject<List<JObject>>(result.GetValue("tableData").ToString());
+            var IconDic = JsonConvert.DeserializeObject<Dictionary<string,JObject>>(result.GetValue("tableIcon").ToString());
 
             foreach (var table in tableList)
             {
@@ -145,8 +147,11 @@ namespace Kfc.ChatRoom
                 {
                     var room = Instantiate(prefab_PrivateRoom_Manifest, manifestContent.transform).GetComponent<PrivateChatRoomBean>();
                     room.name = tableId;
-                    room.Init(tableId,account, mNickName, table.GetValue("notifierAccount").ToString(), table.GetValue("nickName").ToString(), double.Parse(table.GetValue("date").ToString()));
+                    string notifierAccount = table.GetValue("notifierAccount").ToString();
+
+                    room.Init(tableId,account, mNickName, notifierAccount, table.GetValue("nickName").ToString(), (int)IconDic[notifierAccount].GetValue("iconIndex"), IconDic[notifierAccount].GetValue("fbId").ToString(), double.Parse(table.GetValue("date").ToString()));
                     privateChatRoomDic.Add(tableId, room);
+                    Generic.IconFetcher.SetIcon(room.transform.Find("Gobj_Pages/PageFrame/Icon/Icon_Chat").GetComponent<Image>(), room.otherIconIndex, room.otherFbId);
                     room.gameObject.SetActive(true);
                 }
             }
@@ -188,6 +193,7 @@ namespace Kfc.ChatRoom
                 }
                 privateBean.PrivateChatRoomControl.gameObject.SetActive(true);
                 _roomManifest.transform.Find("Img_IsNew").gameObject.SetActive(false);
+
             }
             currentRoom = _roomManifest.transform;
         }

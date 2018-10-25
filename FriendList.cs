@@ -89,7 +89,8 @@ namespace Kfc.ChatRoom
                     friendObj.GetComponent<PlayerBean>().Init(friend["account"].ToString(), friend["name"].ToString(), friend["fbId"].ToString(), int.Parse(friend["iconIndex"].ToString()), int.Parse(friend["vipLevel"].ToString()), friend["saySomething"].ToString());
                     friendObj.transform.Find("UITxt_Name").GetComponent<Text>().text = friend["name"].ToString();
                     friendObj.transform.Find("UIImg_TalkMask/UITxt_Talking").GetComponent<Text>().text = friend["saySomething"].ToString();
-                    
+                    Generic.IconFetcher.SetIcon(friendObj.transform.Find("UIImg_Icon").GetComponent<Image>(), (int)friend["iconIndex"], friend["fbId"].ToString());
+
                 };
              
             }
