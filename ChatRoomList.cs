@@ -85,7 +85,7 @@ namespace Kfc.ChatRoom
             foreach (var player in players)
             {
                 var bean = Instantiate(prefab_searchedPlayer, trans_SearchContent).GetComponent<PlayerBean>();
-                bean.Init(player["account"].ToString(), player["name"].ToString(), player["fbId"].ToString(), int.Parse(player["vipLevel"].ToString()), int.Parse(player["iconIndex"].ToString()), player["saySomething"].ToString());
+                bean.Init(player["account"].ToString(), player["name"].ToString(), player["fbId"].ToString(), int.Parse(player["iconIndex"].ToString()), int.Parse(player["vipLevel"].ToString()), player["saySomething"].ToString());
 
                 bean.txt_nickName.text = bean.nickName;
                 bean.txt_saySomething.text = bean.saySomething;
