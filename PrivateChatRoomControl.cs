@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using BestHTTP;
 using System.Text;
+using Xefier.Threading.Asynchronous;
 
 namespace Kfc.ChatRoom
 {
@@ -128,7 +129,7 @@ namespace Kfc.ChatRoom
         {
 
             GameObject tempPrefab;
-            if (Encoding.Default.GetByteCount(_content) < 40)
+            if (Encoding.Default.GetByteCount(_content) < 28)
             {
                 if (_isMe) tempPrefab = prefabSingleChatBarM;
                 else tempPrefab = prefabSingleChatBarO;
@@ -140,21 +141,46 @@ namespace Kfc.ChatRoom
 
             }
 
-            Transform text = Instantiate(tempPrefab, contentObject.transform).transform;
-            text.Find("Gobj_Info/UITxt_Name").GetComponent<Text>().text = _nickName;
-            Generic.IconFetcher.SetIcon(text.Find("Gobj_Info/UIImg_Icon").GetComponent<Image>(), _iconIndex, _fbId);
-            text.Find("UIImg_MsgBG/Text").GetComponent<Text>().text = _content;
-            text.gameObject.SetActive(true);
-            if (text.GetComponent<HorizontalOrVerticalLayoutGroup>() != null)
-            {
-                Canvas.ForceUpdateCanvases();
-                text.GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = false;
-                text.GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = true;
 
-            }
-            Canvas.ForceUpdateCanvases();
-            text.Find("UIImg_MsgBG").GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = false;
-            text.Find("UIImg_MsgBG").GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = true;
+            var task = Async.Instantiate(tempPrefab, contentObject.transform, false);
+
+            task.Ready += (_task) =>
+            {
+                Transform text = _task.Result.transform;
+                text.Find("Gobj_Info/UITxt_Name").GetComponent<Text>().text = _nickName;
+                text.GetComponent<IconVisibleMonitor>().SetFbIdAndIconIndex(_iconIndex, _fbId);
+                //Generic.IconFetcher.SetIcon(text.Find("Gobj_Info/UIImg_Icon").GetComponent<Image>(), _iconIndex, _fbId);
+                text.Find("UIImg_MsgBG/Text").GetComponent<Text>().text = _content;
+                text.gameObject.SetActive(true);
+                if (text.GetComponent<HorizontalOrVerticalLayoutGroup>() != null)
+                {
+                    Canvas.ForceUpdateCanvases();
+                    text.GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = false;
+                    text.GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = true;
+
+                }
+                Canvas.ForceUpdateCanvases();
+                text.Find("UIImg_MsgBG").GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = false;
+                text.Find("UIImg_MsgBG").GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = true;
+            };
+
+
+
+            //Transform text = Instantiate(tempPrefab, contentObject.transform).transform;
+            //text.Find("Gobj_Info/UITxt_Name").GetComponent<Text>().text = _nickName;
+            //Generic.IconFetcher.SetIcon(text.Find("Gobj_Info/UIImg_Icon").GetComponent<Image>(), _iconIndex, _fbId);
+            //text.Find("UIImg_MsgBG/Text").GetComponent<Text>().text = _content;
+            //text.gameObject.SetActive(true);
+            //if (text.GetComponent<HorizontalOrVerticalLayoutGroup>() != null)
+            //{
+            //    Canvas.ForceUpdateCanvases();
+            //    text.GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = false;
+            //    text.GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = true;
+
+            //}
+            //Canvas.ForceUpdateCanvases();
+            //text.Find("UIImg_MsgBG").GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = false;
+            //text.Find("UIImg_MsgBG").GetComponent<HorizontalOrVerticalLayoutGroup>().enabled = true;
 
         }
     }

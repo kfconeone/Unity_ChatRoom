@@ -89,6 +89,7 @@ namespace Kfc.ChatRoom
 
                 bean.txt_nickName.text = bean.nickName;
                 bean.txt_saySomething.text = bean.saySomething;
+                bean.transform.Find("UIImg_VipLv").GetComponent<Image>().sprite = Resources.Load<Sprite>("ScriptImg/VIP_Lv/VIP_Lv" + (int.Parse(player["vipLevel"].ToString()) + 1).ToString());
                 Generic.IconFetcher.SetIcon(bean.transform.Find("UIImg_Icon").GetComponent<Image>(), bean.iconIndex, bean.fbId);
 
                 bean.gameObject.SetActive(true);

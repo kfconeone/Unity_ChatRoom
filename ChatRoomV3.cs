@@ -79,7 +79,7 @@ namespace Kfc.ChatRoom
 
         public void CreateChatRoom(GameObject _searchBean)
         {
-            SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ComClick1.ToString());
+            // SlotSoundManager.bSndRef.PlaySoundEffect(ReferenceCenter.Ref.CommonMu.Container, SlotSoundManager.eAudioClip.Snd_ComClick1.ToString());
             currentPlayerBean = _searchBean.GetComponent<PlayerBean>();
             Uri path = new Uri(url_InvitePlayerToPrivateChatroom);
             double lastUpdateTime = DateTime.UtcNow.AddHours(8).Ticks;
